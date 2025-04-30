@@ -2,77 +2,40 @@ import React from 'react';
 
 const UserCard = ({ user }) => {
   return (
-    <div className="bg-white dark:bg-[#1E2A47] p-6 rounded-2xl shadow-md flex flex-col md:flex-row gap-6 mt-6">
-      <img
-        src={user.avatar_url}
-        alt={user.name}
-        className="w-24 h-24 rounded-full"
-      />
-      <div className="flex-1">
-        <div className="flex flex-col md:flex-row justify-between">
+    <div className="bg-white dark:bg-[#1E2A47] rounded-xl p-6 shadow-md mt-6">
+      <div className="flex gap-6">
+        <img
+          src={user.avatar_url}
+          alt={user.name}
+          className="w-20 h-20 rounded-full"
+        />
+        <div>
           <h2 className="text-xl font-bold">{user.name || 'Not Available'}</h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            Joined {new Date(user.created_at).toLocaleDateString()}
-          </p>
+          <p className="text-sm text-blue-500">@{user.login}</p>
+          <p className="text-sm mt-2">{user.bio || 'This profile has no bio.'}</p>
         </div>
-        <p className="text-blue-500">@{user.login}</p>
-        <p className="mt-4 text-sm text-gray-700 dark:text-gray-300">
-          {user.bio || 'This profile has no bio'}
-        </p>
+      </div>
 
-        <div className="bg-[#F6F8FF] dark:bg-[#141D2F] p-4 rounded-xl mt-4 grid grid-cols-3 text-center">
-          <div>
-            <p className="text-xs text-gray-500">Repos</p>
-            <p className="text-lg font-bold">{user.public_repos}</p>
-          </div>
-          <div>
-            <p className="text-xs text-gray-500">Followers</p>
-            <p className="text-lg font-bold">{user.followers}</p>
-          </div>
-          <div>
-            <p className="text-xs text-gray-500">Following</p>
-            <p className="text-lg font-bold">{user.following}</p>
-          </div>
+      <div className="flex justify-around bg-gray-100 dark:bg-[#141D2F] p-4 rounded-lg mt-6">
+        <div className="text-center">
+          <p className="text-xs">Repos</p>
+          <p className="text-lg font-bold">{user.public_repos}</p>
         </div>
+        <div className="text-center">
+          <p className="text-xs">Followers</p>
+          <p className="text-lg font-bold">{user.followers}</p>
+        </div>
+        <div className="text-center">
+          <p className="text-xs">Following</p>
+          <p className="text-lg font-bold">{user.following}</p>
+        </div>
+      </div>
 
-        <div className="grid md:grid-cols-2 gap-4 mt-6 text-sm">
-          <p className="flex items-center gap-2">
-            📍 {user.location || 'Not Available'}
-          </p>
-          <p className="flex items-center gap-2">
-            🔗{' '}
-            {user.blog ? (
-              <a
-                href={user.blog}
-                className="hover:underline"
-                target="_blank"
-                rel="noreferrer"
-              >
-                {user.blog}
-              </a>
-            ) : (
-              'Not Available'
-            )}
-          </p>
-          <p className="flex items-center gap-2">
-            🐦{' '}
-            {user.twitter_username ? (
-              <a
-                href={`https://twitter.com/${user.twitter_username}`}
-                className="hover:underline"
-                target="_blank"
-                rel="noreferrer"
-              >
-                @{user.twitter_username}
-              </a>
-            ) : (
-              'Not Available'
-            )}
-          </p>
-          <p className="flex items-center gap-2">
-            🏢 {user.company || 'Not Available'}
-          </p>
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6 text-sm">
+        <p>📍 {user.location || 'Not Available'}</p>
+        <p>🔗 <a href={user.blog} target="_blank" rel="noopener noreferrer">{user.blog || 'Not Available'}</a></p>
+        <p>🐦 {user.twitter_username || 'Not Available'}</p>
+        <p>🏢 {user.company || 'Not Available'}</p>
       </div>
     </div>
   );
