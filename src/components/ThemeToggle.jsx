@@ -1,14 +1,16 @@
 import React from 'react';
 import { Moon, Sun } from 'lucide-react';
 
-export default function ThemeToggle({ theme, setTheme }) {
+const ThemeToggle = ({ darkMode, setDarkMode }) => {
   return (
     <button
-      onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-      className="flex items-center gap-2 text-sm font-semibold"
+      className="uppercase text-sm tracking-widest flex items-center gap-2"
+      onClick={() => setDarkMode(!darkMode)}
     >
-      {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
-      <span className="uppercase">{theme === 'light' ? 'DARK' : 'LIGHT'}</span>
+      {darkMode ? <Sun size={18} /> : <Moon size={18} />}
+      {darkMode ? 'Light' : 'Dark'}
     </button>
   );
-}
+};
+
+export default ThemeToggle;
