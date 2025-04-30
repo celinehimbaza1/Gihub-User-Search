@@ -5,10 +5,8 @@ const SearchBar = ({ onSearch }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (input.trim()) {
-      onSearch(input.trim());
-      setInput('');
-    }
+    onSearch(input);
+    setInput('');
   };
 
   return (
@@ -18,7 +16,7 @@ const SearchBar = ({ onSearch }) => {
     >
       <input
         type="text"
-        placeholder="Search GitHub username…"
+        placeholder="Search the username"
         className="flex-1 bg-transparent outline-none text-sm md:text-base placeholder-gray-500 dark:placeholder-gray-400"
         value={input}
         onChange={(e) => setInput(e.target.value)}
