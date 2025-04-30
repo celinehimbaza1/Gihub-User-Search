@@ -1,67 +1,72 @@
-import { useState, useEffect } from "react";
-import SearchBar from "./SearchBar";
-import UserCard from "./UserCard";
-import { Moon, Sun } from "lucide-react";
+import React, { useState, useEffect } from 'react';
+import SearchBar from './components/SearchBar';
+import ThemeToggle from './components/ThemeToggle';
+import UserCard from './components/UserCard';
 
 function Github() {
-  const [user, setUser] = useState(null);
-  const [theme, setTheme] = useState("light");
-  const [error, setError] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => {
+    const stored = localStorage.getItem('darkMode');
+    return stored === 'true';
+  });
 
-  const fetchUser = async (username) => {
-    setError(false);
+  const [username, setUsername] = useState('octocat');
+  const [userData, setUserData] = useState(null);
+  const [error, setError] = useState('');
+
+  const fetchUser = async (user) => {
+    setError('');
+    if (!user.trim()) {
+      setUserData(null);
+      setError('Please enter a username.');
+      return;
+    }
+
     try {
-      const response = await fetch(`https://api.github.com/users/${username}`);
-      if (response.status === 404) {
-        setError(true);
-        setUser(null);
+      const res = await fetch(`https://api.github.com/users/${user}`);
+      const data = await res.json();
+
+      if (res.status === 404 || data.message === 'Not Found') {
+        setUserData(null);
+        setError('User not found.');
       } else {
-        const data = await response.json();
-        setUser(data);
+        setUserData(data);
       }
     } catch (err) {
-      console.error("Error fetching user:", err);
-      setError(true);
+      console.error('Fetch error:', err);
+      setUserData(null);
+      setError('Something went wrong. Please try again.');
     }
   };
 
-  const toggleTheme = () => {
-    const newTheme = theme === "light" ? "dark" : "light";
-    setTheme(newTheme);
-    document.documentElement.classList.toggle("dark", newTheme === "dark");
-  };
+  useEffect(() => {
+    fetchUser(username);
+  }, [username]);
 
   useEffect(() => {
-    fetchUser("octocat"); // default user
-    document.documentElement.classList.add("transition-colors", "duration-300");
-    document.documentElement.classList.toggle("dark", theme === "dark");
-  }, []);
+    const html = document.documentElement;
+    if (darkMode) {
+      html.classList.add('dark');
+    } else {
+      html.classList.remove('dark');
+    }
+    localStorage.setItem('darkMode', darkMode);
+  }, [darkMode]);
 
   return (
-    <div className="min-h-screen font-mono bg-[#F6F8FF] dark:bg-[#141D2F] text-gray-900 dark:text-white transition-colors">
-      <div className="max-w-3xl mx-auto p-6">
+    <div className="min-h-screen bg-[#F6F8FF] dark:bg-[#141D2F] text-black dark:text-white p-4 md:p-10 font-sans transition-colors">
+      <div className="max-w-3xl mx-auto">
         <header className="flex justify-between items-center mb-8">
-          <h1 className="font-bold text-2xl">devfinder</h1>
-          <button
-            onClick={toggleTheme}
-            className="text-sm tracking-widest font-semibold flex items-center gap-2"
-          >
-            {theme === "light" ? (
-              <>
-                <Moon className="w-5 h-5" />
-                DARK
-              </>
-            ) : (
-              <>
-                <Sun className="w-5 h-5" />
-                LIGHT
-              </>
-            )}
-          </button>
+          <h1 className="text-2xl font-bold">devfinder</h1>
+          <ThemeToggle darkMode={darkMode} setDarkMode={setDarkMode} />
         </header>
 
-        <SearchBar fetchUser={fetchUser} error={error} />
-        {user && <UserCard user={user} />}
+        <SearchBar onSearch={setUsername} />
+
+        {error && (
+          <p className="text-red-500 text-sm mt-4 text-center">{error}</p>
+        )}
+
+        {userData && <UserCard user={userData} />}
       </div>
     </div>
   );
